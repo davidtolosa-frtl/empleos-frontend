@@ -1,23 +1,50 @@
-import { Layout, Menu } from 'antd';
-import { Link } from 'react-router-dom';
-import { UnorderedListOutlined, PlusOutlined } from '@ant-design/icons';
+import { Layout, Button, Space } from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
+import { UnorderedListOutlined, PlusOutlined, LogoutOutlined, LoginOutlined } from '@ant-design/icons';
+import { getUser, logout, isAuthenticated } from '../../services/auth';
 
 const { Header } = Layout;
 
 function AppHeader() {
+  const user = getUser();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
-    <Header>
-      <div style={{ color: 'white', fontSize: '20px', float: 'left', marginRight: '50px' }}>
-        Empleos UTN
+    <Header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <div style={{ color: 'white', fontSize: '20px' }}>
+          Empleos UTN
+        </div>
+        {isAuthenticated() && (
+          <Space size="middle">
+            <Link to="/" style={{ color: 'white' }}>
+              <UnorderedListOutlined /> Ver Empleos
+            </Link>
+            <Link to="/crear" style={{ color: 'white' }}>
+              <PlusOutlined /> Publicar Empleo
+            </Link>
+          </Space>
+        )}
       </div>
-      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-        <Menu.Item key="1" icon={<UnorderedListOutlined />}>
-          <Link to="/">Ver Empleos</Link>
-        </Menu.Item>
-        <Menu.Item key="2" icon={<PlusOutlined />}>
-          <Link to="/crear">Publicar Empleo</Link>
-        </Menu.Item>
-      </Menu>
+      <Space>
+        {isAuthenticated() ? (
+          <>
+            <span style={{ color: 'white' }}>{user?.email}</span>
+            <Button icon={<LogoutOutlined />} onClick={handleLogout}>
+              Cerrar Sesión
+            </Button>
+          </>
+        ) : (
+          <Button icon={<LoginOutlined />} onClick={() => navigate('/login')}>
+            Ingresar para publicar
+          </Button>
+        )}
+      </Space>
     </Header>
   );
 }

@@ -12,10 +12,8 @@ function EmpleoCard({ empleo }) {
   return (
     <Card
       title={empleo.titulo}
+      extra={<Tag color="blue">{empleo.tipo_contrato || 'No especificado'}</Tag>}
       hoverable
-      actions={[
-        <Tag color="blue">{empleo.tipo_contrato || 'No especificado'}</Tag>
-      ]}
     >
       <Space direction="vertical" style={{ width: '100%' }}>
         <Text strong>Empresa: {empleo.empresa_nombre || 'No disponible'}</Text>
