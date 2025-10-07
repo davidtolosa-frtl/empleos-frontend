@@ -16,6 +16,8 @@ Aplicación web frontend desarrollada con React + Vite para la gestión de aviso
 - ✅ Búsqueda y filtrado avanzado (ubicación, tipo de empleo, rango salarial)
 - ✅ Creación de nuevos avisos de empleo
 - ✅ Registro de empresas
+- ✅ Sistema de autenticación con login
+- ✅ Rutas protegidas para funcionalidades que requieren autenticación
 - ✅ Interfaz responsive y moderna con Ant Design
 
 ## 📁 Estructura del Proyecto
@@ -30,13 +32,16 @@ src/
 │   │   └── LoadingSpinner.jsx
 │   ├── empresa/         # Componentes relacionados con empresas
 │   │   └── EmpresaForm.jsx
-│   └── layout/          # Componentes de layout
-│       └── AppHeader.jsx
+│   ├── layout/          # Componentes de layout
+│   │   └── AppHeader.jsx
+│   └── ProtectedRoute.jsx  # HOC para rutas protegidas
 ├── pages/               # Páginas de la aplicación
 │   ├── ListaEmpleos.jsx
-│   └── CrearEmpleo.jsx
+│   ├── CrearEmpleo.jsx
+│   └── Login.jsx
 ├── services/            # Servicios y configuración de API
-│   └── api.js
+│   ├── api.js
+│   └── auth.js          # Funciones de autenticación
 ├── App.jsx
 └── main.jsx
 ```
@@ -61,8 +66,9 @@ cd frontend
 npm install
 ```
 
-3. Configurar la URL del backend:
-   - Editar `src/services/api.js` y actualizar `baseURL` si el backend no está en `http://localhost:3000/api`
+3. Configurar variables de entorno:
+   - Crear un archivo `.env` basado en `.env.example`
+   - Configurar `VITE_API_URL` con la URL del backend (por defecto: `http://localhost:3000/api`)
 
 ### Ejecutar en modo desarrollo
 
@@ -81,18 +87,20 @@ La aplicación estará disponible en `http://localhost:5173`
 
 ## 🔗 Integración con Backend
 
-La aplicación se comunica con el backend a través de Axios. La configuración se encuentra en `src/services/api.js`.
+La aplicación se comunica con el backend a través de Axios. La configuración se encuentra en [src/services/api.js](src/services/api.js).
 
 **Endpoints utilizados:**
 - `GET /empleos` - Obtener lista de empleos con filtros
 - `POST /empleos` - Crear nuevo empleo
 - `POST /empresas` - Registrar nueva empresa
+- `POST /auth/login` - Autenticar usuario y obtener token
 
 ## 🎨 Componentes Principales
 
 ### Páginas
 - **ListaEmpleos** - Vista principal con listado, búsqueda y filtros
-- **CrearEmpleo** - Formulario para crear empleos y registrar empresas
+- **CrearEmpleo** - Formulario para crear empleos y registrar empresas (requiere autenticación)
+- **Login** - Página de inicio de sesión
 
 ### Componentes
 - **EmpleoCard** - Tarjeta que muestra información de cada empleo
@@ -100,6 +108,7 @@ La aplicación se comunica con el backend a través de Axios. La configuración 
 - **EmpleoForm** - Formulario de creación de empleos
 - **EmpresaForm** - Formulario de registro de empresas
 - **AppHeader** - Header de la aplicación con navegación
+- **ProtectedRoute** - Componente HOC para proteger rutas que requieren autenticación
 
 ## 🚀 Build para Producción
 
@@ -114,6 +123,8 @@ Los archivos optimizados se generarán en la carpeta `dist/`
 - El proyecto usa ESLint para mantener la calidad del código
 - Se utiliza Fast Refresh de Vite para hot reload durante el desarrollo
 - Ant Design provee temas y componentes personalizables
+- La autenticación se maneja mediante tokens JWT almacenados en localStorage
+- Las variables de entorno se cargan con el prefijo `VITE_` para ser accesibles en el cliente
 
 ## 🤝 Contribuir
 
